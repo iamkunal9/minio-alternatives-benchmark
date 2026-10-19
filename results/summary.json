@@ -72,6 +72,12 @@
           "max": 2.37,
           "n": 5
         },
+        "cpuSeconds": {
+          "median": 10,
+          "min": 6.4,
+          "max": 12.1,
+          "n": 5
+        },
         "diskMiBAfterOneCopy": {
           "median": 613,
           "min": 613,
@@ -271,6 +277,12 @@
           "max": 2.3,
           "n": 5
         },
+        "cpuSeconds": {
+          "median": 15.5,
+          "min": 13.1,
+          "max": 18,
+          "n": 5
+        },
         "diskMiBAfterOneCopy": {
           "median": 608,
           "min": 608,
@@ -468,6 +480,12 @@
           "median": 2.21,
           "min": 1.98,
           "max": 2.42,
+          "n": 5
+        },
+        "cpuSeconds": {
+          "median": 8.3,
+          "min": 5.4,
+          "max": 13.3,
           "n": 5
         },
         "diskMiBAfterOneCopy": {

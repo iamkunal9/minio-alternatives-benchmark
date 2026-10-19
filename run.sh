@@ -60,6 +60,7 @@ start_store() { # <store> <volume>
 }
 
 # Container cgroup v2 counters (read from inside the container's own cgroup namespace).
+# The memory sampler is docker exec + 0.5 s sleep, i.e. roughly one sample per second: peak is a lower bound.
 anon_mib() { docker exec "s3-$1" awk '/^anon /{printf "%.1f", $2/1048576}' /sys/fs/cgroup/memory.stat; }
 cpu_usec() { docker exec "s3-$1" awk '/^usage_usec /{print $2}' /sys/fs/cgroup/cpu.stat; }
 
@@ -121,13 +122,17 @@ durability() { # <store>
 environment() {
   node -e '
     const { execSync } = require("child_process");
-    const sh = (c) => { try { return execSync(c, { encoding: "utf8" }).trim(); } catch { return null; } };
+    const sh = (c) => { try { return execSync(c, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); } catch { return null; } };
+    const os = require("os");
+    const mac = process.platform === "darwin";
     const digest = (img) => sh(`docker image inspect ${img} --format "{{index .RepoDigests 0}}"`) ?? sh(`docker image inspect ${img} --format "{{.Id}}"`);
     const lock = JSON.parse(require("fs").readFileSync("package-lock.json", "utf8")).packages;
     const [rustfs, seaweedfs, minioImage, minioTag, client] = process.argv.slice(1);
     console.log(JSON.stringify({
       date: new Date().toISOString(),
-      host: { os: `macOS ${sh("sw_vers -productVersion")}`, model: sh("sysctl -n hw.model"), cpu: sh("sysctl -n machdep.cpu.brand_string"), memGiB: +(sh("sysctl -n hw.memsize") / 2 ** 30).toFixed(0) },
+      host: mac
+        ? { os: `macOS ${sh("sw_vers -productVersion")}`, model: sh("sysctl -n hw.model"), cpu: sh("sysctl -n machdep.cpu.brand_string"), memGiB: +(sh("sysctl -n hw.memsize") / 2 ** 30).toFixed(0) }
+        : { os: `${os.type()} ${os.release()}`, model: sh("cat /sys/devices/virtual/dmi/id/product_name") ?? os.arch(), cpu: os.cpus()[0]?.model ?? null, memGiB: +(os.totalmem() / 2 ** 30).toFixed(0) },
       docker: { version: sh("docker version --format {{.Server.Version}}"), vmCpus: +sh("docker info --format {{.NCPU}}"), vmMemGiB: +(sh("docker info --format {{.MemTotal}}") / 2 ** 30).toFixed(1), kernel: sh("docker info --format {{.KernelVersion}}") },
       stores: {
         rustfs: { image: rustfs, digest: digest(rustfs), mode: "default single-node (single drive)" },

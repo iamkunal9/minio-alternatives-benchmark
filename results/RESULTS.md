@@ -27,10 +27,12 @@ Environment: Mac14,2 (Apple M2, 8 GiB), macOS 27.0.1; Docker 29.8.0 VM with 8 CP
 
 | | RustFS | SeaweedFS | MinIO |
 |---|---|---|---|
-| Startup to first HTTP response (ms) | 32 (28–1229) | 1056 (782–2247) | 237 (146–2989) |
+| Startup: first HTTP response, probe started after docker run (ms, lower bound) | 32 (28–1229) | 1056 (782–2247) | 237 (146–2989) |
 | Idle memory, anon (MiB) | 82 (79–86) | 117 (114–124) | 85 (79–89) |
 | Peak memory under load, anon (MiB) | 348 (323–362) | 1480 (1264–1641) | 394 (346–420) |
-| Average CPU under load (cores) | 2.17 (1.79–2.37) | 2.21 (1.91–2.30) | 2.21 (1.98–2.42) |
+| CPU time for the measured workload (CPU-seconds) | 10.0 (6.4–12.1) | 15.5 (13.1–18.0) | 8.3 (5.4–13.3) |
+| Average CPU utilization during the workload (cores) | 2.17 (1.79–2.37) | 2.21 (1.91–2.30) | 2.21 (1.98–2.42) |
+| Workload wall time (s) | 4.2 (3.1–6.8) | 7.3 (5.7–9.4) | 4.0 (2.7–5.5) |
 | Disk for 607 MiB written once (MiB) | 613 (613–618) | 608 (608–619) | 613 (613–623) |
 
 ## S3 compatibility

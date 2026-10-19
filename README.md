@@ -19,7 +19,7 @@ Full numbers: [`results/RESULTS.md`](results/RESULTS.md) · machine-readable: [`
 
 - **RustFS 1.0.3 is the closest drop-in for MinIO**: throughput on par with MinIO (clearly ahead only on 64 KiB reads, 150 vs 122 MiB/s; other gaps are within run-to-run noise) at similar memory: **348 MiB** peak vs MinIO's 394 MiB.
 - **SeaweedFS 4.48 (`weed mini`) wins small uploads** (99 vs RustFS 57 MiB/s on 64 KiB PUT) but is 2–3× slower on large writes (8 MiB PUT 107 vs 326 MiB/s; 256 MiB multipart 126 vs 276 MiB/s) and peaks at **1480 MiB** of memory.
-- CPU for the same workload is the same for all three (~2.2 cores); no disk overhead (~613 MiB for 607 MiB).
+- **CPU time** for the whole workload: RustFS 10.0 s, MinIO 8.3 s, SeaweedFS 15.5 s CPU-seconds (median). SeaweedFS used ~1.6× RustFS in every run; RustFS vs MinIO is within noise. No disk overhead (~613 MiB for 607 MiB).
 - **Zero lost or corrupt acknowledged objects** across 6 `kill -9` cycles per store (26,111 writes).
 - 14/15 S3 checks pass on each: RustFS and SeaweedFS drop `x-amz-meta-*` signed into presigned PUT URLs; MinIO returns `NotImplemented` for `PutBucketCors`.
 
@@ -29,9 +29,9 @@ Full numbers: [`results/RESULTS.md`](results/RESULTS.md) · machine-readable: [`
 | Area | How |
 |---|---|
 | Throughput & latency | 607 MiB of random (incompressible) data: 500 × 64 KiB (16 concurrent), 40 × 8 MiB (4 concurrent), one 256 MiB multipart upload in 16 MiB parts (4 concurrent). Each object is written, then read back. MiB/s, ops/s, p50/p99. |
-| Memory | Container cgroup v2 `anon` (heap; page cache excluded): idle after 15 s, and peak sampled every 0.5 s during the measured pass. |
-| CPU | Container cgroup `cpu.stat` `usage_usec` delta over the measured pass, divided by wall time (= average cores). |
-| Startup | Container start → first HTTP response. |
+| Memory | Container cgroup v2 `anon` (heap; page cache excluded): idle after 15 s, and peak sampled roughly once a second (`docker exec` + 0.5 s sleep) during the measured pass, so the peak is a lower bound. |
+| CPU | Container cgroup `cpu.stat` `usage_usec` delta over the measured pass: total **CPU-seconds** for the workload (the fair cost figure), plus average utilization (CPU-seconds ÷ wall time). |
+| Startup | Time until the first HTTP response, measured by a probe started right after `docker run` (the probe's own start-up, a few hundred ms, is not counted, so this is a lower bound). |
 | Disk | `du` of the data directory after the dataset is written once. |
 | S3 compatibility | 15 checks with the AWS SDK for JavaScript v3: CORS config, browser presigned PUT + preflight, metadata in presigned URLs, metadata on PutObject, presigned GET, CopyObject, Range GET, If-None-Match 304, ListObjectsV2 pagination, multipart + UploadPartCopy, abort multipart, tagging, versioning, batch delete. |
 | Crash durability | 8 writers upload 256–280 KiB objects for 4 s; the store is `kill -9`'d mid-write or right after the last ack, restarted on the same volume, and every **acknowledged** object is read back and SHA-256 verified. 6 cycles per store. |
@@ -51,7 +51,7 @@ Full numbers: [`results/RESULTS.md`](results/RESULTS.md) · machine-readable: [`
 
 ## Run it yourself
 
-Requirements: Docker (with ~4 GB RAM for the VM) and Node 20+.
+Requirements: Docker (with ~4 GB RAM for the VM) and Node 20+. Tested on macOS (Docker Desktop); on Linux the environment capture falls back to `/proc`/`os` values.
 
 ```bash
 git clone https://github.com/iamkunal9/minio-alternatives-benchmark.git

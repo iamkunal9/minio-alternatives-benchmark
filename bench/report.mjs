@@ -22,6 +22,8 @@ const METRICS = {
   idleAnonMiB: (r) => r.idleAnonMiB,
   peakAnonMiB: (r) => r.peakAnonMiB,
   avgCpuCores: (r) => r.avgCpuCores,
+  /** CPU time spent on the whole measured workload (utilization x wall time); the fair "CPU cost" figure. */
+  cpuSeconds: (r) => +(r.avgCpuCores * r.wallSeconds).toFixed(1),
   diskMiBAfterOneCopy: (r) => r.diskMiBAfterOneCopy,
   wallSeconds: (r) => r.wallSeconds,
 };
@@ -78,10 +80,12 @@ ${row('8 MiB GET p99', 'medium-8MiB.get.p99ms', 1)}
 ## Resources
 
 ${head}
-${row('Startup to first HTTP response (ms)', 'readyMs')}
+${row('Startup: first HTTP response, probe started after docker run (ms, lower bound)', 'readyMs')}
 ${row('Idle memory, anon (MiB)', 'idleAnonMiB')}
 ${row('Peak memory under load, anon (MiB)', 'peakAnonMiB')}
-${row('Average CPU under load (cores)', 'avgCpuCores', 2)}
+${row('CPU time for the measured workload (CPU-seconds)', 'cpuSeconds', 1)}
+${row('Average CPU utilization during the workload (cores)', 'avgCpuCores', 2)}
+${row('Workload wall time (s)', 'wallSeconds', 1)}
 ${row('Disk for 607 MiB written once (MiB)', 'diskMiBAfterOneCopy')}
 
 ## S3 compatibility
