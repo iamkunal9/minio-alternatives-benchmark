@@ -1,0 +1,4 @@
+node_modules/
+results/raw/*.state
+results/run.out
+results/run.err

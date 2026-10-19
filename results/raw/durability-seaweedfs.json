@@ -1,0 +1,50 @@
+[
+  {
+    "cycle": 1,
+    "mode": "mid-write",
+    "acked": 533,
+    "ok": 533,
+    "missing": 0,
+    "corrupt": 0
+  },
+  {
+    "cycle": 2,
+    "mode": "after-ack",
+    "acked": 1991,
+    "ok": 1991,
+    "missing": 0,
+    "corrupt": 0
+  },
+  {
+    "cycle": 3,
+    "mode": "mid-write",
+    "acked": 1251,
+    "ok": 1251,
+    "missing": 0,
+    "corrupt": 0
+  },
+  {
+    "cycle": 4,
+    "mode": "after-ack",
+    "acked": 2398,
+    "ok": 2398,
+    "missing": 0,
+    "corrupt": 0
+  },
+  {
+    "cycle": 5,
+    "mode": "mid-write",
+    "acked": 1167,
+    "ok": 1167,
+    "missing": 0,
+    "corrupt": 0
+  },
+  {
+    "cycle": 6,
+    "mode": "after-ack",
+    "acked": 2006,
+    "ok": 2006,
+    "missing": 0,
+    "corrupt": 0
+  }
+]

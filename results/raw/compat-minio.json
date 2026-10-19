@@ -1,0 +1,17 @@
+{
+  "CreateBucket": "ok",
+  "PutBucketCors / GetBucketCors": "FAIL NotImplemented: A header you provided implies functionality that is not implemented",
+  "Presigned PUT from a browser (CORS preflight + PUT)": "ok",
+  "Presigned PUT keeps x-amz-meta-* signed into the URL": "ok",
+  "PutObject metadata -> HeadObject": "ok",
+  "Presigned GET": "ok",
+  "CopyObject (server-side)": "ok",
+  "Range GET": "ok",
+  "Conditional GET (If-None-Match -> 304)": "ok",
+  "ListObjectsV2 (prefix + pagination)": "ok",
+  "Multipart upload + UploadPartCopy": "ok",
+  "AbortMultipartUpload": "ok",
+  "Object tagging": "ok",
+  "Bucket versioning": "ok",
+  "DeleteObjects (batch)": "ok"
+}

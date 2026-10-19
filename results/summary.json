@@ -1,0 +1,646 @@
+{
+  "environment": {
+    "date": "2026-10-19T07:28:10.435Z",
+    "host": {
+      "os": "macOS 27.0.1",
+      "model": "Mac14,2",
+      "cpu": "Apple M2",
+      "memGiB": 8
+    },
+    "docker": {
+      "version": "29.8.0",
+      "vmCpus": 8,
+      "vmMemGiB": 3.8,
+      "kernel": "7.0.12-linuxkit"
+    },
+    "stores": {
+      "rustfs": {
+        "image": "rustfs/rustfs:1.0.3",
+        "digest": "rustfs/rustfs@sha256:9ca9559533b537d10482fe923288b676ad08f92a7069d9a17327fbae3cab688b",
+        "mode": "default single-node (single drive)"
+      },
+      "seaweedfs": {
+        "image": "chrislusf/seaweedfs:4.48",
+        "digest": "chrislusf/seaweedfs@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d",
+        "mode": "weed mini (all-in-one dev mode)"
+      },
+      "minio": {
+        "tag": "RELEASE.2025-10-15T17-29-55Z",
+        "commit": "9e49d5e7a648f00e26f2246f4dc28e6b07f8c84a",
+        "build": "built from source (stores/minio/Dockerfile)",
+        "mode": "server /data (single drive)"
+      }
+    },
+    "client": {
+      "image": "node:24-slim",
+      "digest": "node@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5",
+      "node": "v24.22.0",
+      "awsSdkClientS3": "3.1152.0"
+    },
+    "workload": {
+      "data": "random (incompressible)",
+      "small": "500 x 64 KiB, 16 concurrent",
+      "medium": "40 x 8 MiB, 4 concurrent",
+      "multipart": "256 MiB in 16 MiB parts, 4 concurrent"
+    }
+  },
+  "stores": {
+    "rustfs": {
+      "runs": 5,
+      "metrics": {
+        "readyMs": {
+          "median": 32,
+          "min": 28,
+          "max": 1229,
+          "n": 5
+        },
+        "idleAnonMiB": {
+          "median": 81.6,
+          "min": 79.4,
+          "max": 85.9,
+          "n": 5
+        },
+        "peakAnonMiB": {
+          "median": 347.5,
+          "min": 323.2,
+          "max": 361.9,
+          "n": 5
+        },
+        "avgCpuCores": {
+          "median": 2.17,
+          "min": 1.79,
+          "max": 2.37,
+          "n": 5
+        },
+        "diskMiBAfterOneCopy": {
+          "median": 613,
+          "min": 613,
+          "max": 618,
+          "n": 5
+        },
+        "wallSeconds": {
+          "median": 4.2,
+          "min": 3.07,
+          "max": 6.77,
+          "n": 5
+        },
+        "small-64KiB.put.MiBps": {
+          "median": 56.8,
+          "min": 27.6,
+          "max": 59,
+          "n": 5
+        },
+        "small-64KiB.put.ops": {
+          "median": 909.1,
+          "min": 441,
+          "max": 943.6,
+          "n": 5
+        },
+        "small-64KiB.put.p99ms": {
+          "median": 61.6,
+          "min": 53.5,
+          "max": 80.8,
+          "n": 5
+        },
+        "small-64KiB.get.MiBps": {
+          "median": 149.5,
+          "min": 143.3,
+          "max": 160.5,
+          "n": 5
+        },
+        "small-64KiB.get.ops": {
+          "median": 2392.4,
+          "min": 2292.5,
+          "max": 2567.7,
+          "n": 5
+        },
+        "small-64KiB.get.p99ms": {
+          "median": 18,
+          "min": 14.6,
+          "max": 23.2,
+          "n": 5
+        },
+        "medium-8MiB.put.MiBps": {
+          "median": 325.5,
+          "min": 175.4,
+          "max": 371.8,
+          "n": 5
+        },
+        "medium-8MiB.put.ops": {
+          "median": 40.7,
+          "min": 21.9,
+          "max": 46.5,
+          "n": 5
+        },
+        "medium-8MiB.put.p99ms": {
+          "median": 158.3,
+          "min": 117,
+          "max": 478.5,
+          "n": 5
+        },
+        "medium-8MiB.get.MiBps": {
+          "median": 455.8,
+          "min": 189.1,
+          "max": 1066.8,
+          "n": 5
+        },
+        "medium-8MiB.get.ops": {
+          "median": 57,
+          "min": 23.6,
+          "max": 133.4,
+          "n": 5
+        },
+        "medium-8MiB.get.p99ms": {
+          "median": 304.9,
+          "min": 62.3,
+          "max": 1271.4,
+          "n": 5
+        },
+        "multipart-256MiB.put.MiBps": {
+          "median": 276.4,
+          "min": 177.3,
+          "max": 293.4,
+          "n": 5
+        },
+        "multipart-256MiB.get.MiBps": {
+          "median": 1036.3,
+          "min": 227.6,
+          "max": 1286,
+          "n": 5
+        }
+      },
+      "compat": {
+        "CreateBucket": "ok",
+        "PutBucketCors / GetBucketCors": "ok",
+        "Presigned PUT from a browser (CORS preflight + PUT)": "ok",
+        "Presigned PUT keeps x-amz-meta-* signed into the URL": "FAIL Error: metadata not stored (got {})",
+        "PutObject metadata -> HeadObject": "ok",
+        "Presigned GET": "ok",
+        "CopyObject (server-side)": "ok",
+        "Range GET": "ok",
+        "Conditional GET (If-None-Match -> 304)": "ok",
+        "ListObjectsV2 (prefix + pagination)": "ok",
+        "Multipart upload + UploadPartCopy": "ok",
+        "AbortMultipartUpload": "ok",
+        "Object tagging": "ok",
+        "Bucket versioning": "ok",
+        "DeleteObjects (batch)": "ok"
+      },
+      "durability": {
+        "cycles": 6,
+        "acked": 7391,
+        "ok": 7391,
+        "missing": 0,
+        "corrupt": 0
+      },
+      "durabilityCycles": [
+        {
+          "cycle": 1,
+          "mode": "mid-write",
+          "acked": 891,
+          "ok": 891,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 2,
+          "mode": "after-ack",
+          "acked": 1742,
+          "ok": 1742,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 3,
+          "mode": "mid-write",
+          "acked": 892,
+          "ok": 892,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 4,
+          "mode": "after-ack",
+          "acked": 1818,
+          "ok": 1818,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 5,
+          "mode": "mid-write",
+          "acked": 571,
+          "ok": 571,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 6,
+          "mode": "after-ack",
+          "acked": 1477,
+          "ok": 1477,
+          "missing": 0,
+          "corrupt": 0
+        }
+      ]
+    },
+    "seaweedfs": {
+      "runs": 5,
+      "metrics": {
+        "readyMs": {
+          "median": 1056,
+          "min": 782,
+          "max": 2247,
+          "n": 5
+        },
+        "idleAnonMiB": {
+          "median": 117.2,
+          "min": 113.6,
+          "max": 123.5,
+          "n": 5
+        },
+        "peakAnonMiB": {
+          "median": 1479.6,
+          "min": 1264.1,
+          "max": 1640.6,
+          "n": 5
+        },
+        "avgCpuCores": {
+          "median": 2.21,
+          "min": 1.91,
+          "max": 2.3,
+          "n": 5
+        },
+        "diskMiBAfterOneCopy": {
+          "median": 608,
+          "min": 608,
+          "max": 619,
+          "n": 5
+        },
+        "wallSeconds": {
+          "median": 7.35,
+          "min": 5.73,
+          "max": 9.41,
+          "n": 5
+        },
+        "small-64KiB.put.MiBps": {
+          "median": 99.4,
+          "min": 89.3,
+          "max": 120.6,
+          "n": 5
+        },
+        "small-64KiB.put.ops": {
+          "median": 1590.2,
+          "min": 1429,
+          "max": 1930.3,
+          "n": 5
+        },
+        "small-64KiB.put.p99ms": {
+          "median": 39.3,
+          "min": 28.7,
+          "max": 49,
+          "n": 5
+        },
+        "small-64KiB.get.MiBps": {
+          "median": 114,
+          "min": 86.7,
+          "max": 134.9,
+          "n": 5
+        },
+        "small-64KiB.get.ops": {
+          "median": 1823.4,
+          "min": 1386.4,
+          "max": 2158.5,
+          "n": 5
+        },
+        "small-64KiB.get.p99ms": {
+          "median": 24.7,
+          "min": 21.7,
+          "max": 74.3,
+          "n": 5
+        },
+        "medium-8MiB.put.MiBps": {
+          "median": 106.9,
+          "min": 65.4,
+          "max": 171,
+          "n": 5
+        },
+        "medium-8MiB.put.ops": {
+          "median": 13.4,
+          "min": 8.2,
+          "max": 21.4,
+          "n": 5
+        },
+        "medium-8MiB.put.p99ms": {
+          "median": 580.5,
+          "min": 367.5,
+          "max": 1625.3,
+          "n": 5
+        },
+        "medium-8MiB.get.MiBps": {
+          "median": 410.3,
+          "min": 379,
+          "max": 516.5,
+          "n": 5
+        },
+        "medium-8MiB.get.ops": {
+          "median": 51.3,
+          "min": 47.4,
+          "max": 64.6,
+          "n": 5
+        },
+        "medium-8MiB.get.p99ms": {
+          "median": 269.7,
+          "min": 187.9,
+          "max": 351.5,
+          "n": 5
+        },
+        "multipart-256MiB.put.MiBps": {
+          "median": 125.7,
+          "min": 88.2,
+          "max": 142.6,
+          "n": 5
+        },
+        "multipart-256MiB.get.MiBps": {
+          "median": 580.8,
+          "min": 448.5,
+          "max": 691.8,
+          "n": 5
+        }
+      },
+      "compat": {
+        "CreateBucket": "ok",
+        "PutBucketCors / GetBucketCors": "ok",
+        "Presigned PUT from a browser (CORS preflight + PUT)": "ok",
+        "Presigned PUT keeps x-amz-meta-* signed into the URL": "FAIL Error: metadata not stored (got {})",
+        "PutObject metadata -> HeadObject": "ok",
+        "Presigned GET": "ok",
+        "CopyObject (server-side)": "ok",
+        "Range GET": "ok",
+        "Conditional GET (If-None-Match -> 304)": "ok",
+        "ListObjectsV2 (prefix + pagination)": "ok",
+        "Multipart upload + UploadPartCopy": "ok",
+        "AbortMultipartUpload": "ok",
+        "Object tagging": "ok",
+        "Bucket versioning": "ok",
+        "DeleteObjects (batch)": "ok"
+      },
+      "durability": {
+        "cycles": 6,
+        "acked": 9346,
+        "ok": 9346,
+        "missing": 0,
+        "corrupt": 0
+      },
+      "durabilityCycles": [
+        {
+          "cycle": 1,
+          "mode": "mid-write",
+          "acked": 533,
+          "ok": 533,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 2,
+          "mode": "after-ack",
+          "acked": 1991,
+          "ok": 1991,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 3,
+          "mode": "mid-write",
+          "acked": 1251,
+          "ok": 1251,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 4,
+          "mode": "after-ack",
+          "acked": 2398,
+          "ok": 2398,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 5,
+          "mode": "mid-write",
+          "acked": 1167,
+          "ok": 1167,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 6,
+          "mode": "after-ack",
+          "acked": 2006,
+          "ok": 2006,
+          "missing": 0,
+          "corrupt": 0
+        }
+      ]
+    },
+    "minio": {
+      "runs": 5,
+      "metrics": {
+        "readyMs": {
+          "median": 237,
+          "min": 146,
+          "max": 2989,
+          "n": 5
+        },
+        "idleAnonMiB": {
+          "median": 84.8,
+          "min": 79.1,
+          "max": 88.9,
+          "n": 5
+        },
+        "peakAnonMiB": {
+          "median": 394.1,
+          "min": 346,
+          "max": 420.4,
+          "n": 5
+        },
+        "avgCpuCores": {
+          "median": 2.21,
+          "min": 1.98,
+          "max": 2.42,
+          "n": 5
+        },
+        "diskMiBAfterOneCopy": {
+          "median": 613,
+          "min": 613,
+          "max": 623,
+          "n": 5
+        },
+        "wallSeconds": {
+          "median": 4.04,
+          "min": 2.72,
+          "max": 5.5,
+          "n": 5
+        },
+        "small-64KiB.put.MiBps": {
+          "median": 49.7,
+          "min": 36.6,
+          "max": 54.8,
+          "n": 5
+        },
+        "small-64KiB.put.ops": {
+          "median": 794.8,
+          "min": 584.9,
+          "max": 877,
+          "n": 5
+        },
+        "small-64KiB.put.p99ms": {
+          "median": 53.7,
+          "min": 48.5,
+          "max": 154.9,
+          "n": 5
+        },
+        "small-64KiB.get.MiBps": {
+          "median": 121.7,
+          "min": 102.6,
+          "max": 127.6,
+          "n": 5
+        },
+        "small-64KiB.get.ops": {
+          "median": 1946.9,
+          "min": 1641.9,
+          "max": 2041.8,
+          "n": 5
+        },
+        "small-64KiB.get.p99ms": {
+          "median": 23.5,
+          "min": 22.2,
+          "max": 32.4,
+          "n": 5
+        },
+        "medium-8MiB.put.MiBps": {
+          "median": 318.8,
+          "min": 240.2,
+          "max": 438.7,
+          "n": 5
+        },
+        "medium-8MiB.put.ops": {
+          "median": 39.9,
+          "min": 30,
+          "max": 54.8,
+          "n": 5
+        },
+        "medium-8MiB.put.p99ms": {
+          "median": 163.9,
+          "min": 101.8,
+          "max": 262.9,
+          "n": 5
+        },
+        "medium-8MiB.get.MiBps": {
+          "median": 426.6,
+          "min": 280.9,
+          "max": 823.2,
+          "n": 5
+        },
+        "medium-8MiB.get.ops": {
+          "median": 53.3,
+          "min": 35.1,
+          "max": 102.9,
+          "n": 5
+        },
+        "medium-8MiB.get.p99ms": {
+          "median": 209.9,
+          "min": 90.5,
+          "max": 474.8,
+          "n": 5
+        },
+        "multipart-256MiB.put.MiBps": {
+          "median": 323.8,
+          "min": 155.4,
+          "max": 436.3,
+          "n": 5
+        },
+        "multipart-256MiB.get.MiBps": {
+          "median": 1279.6,
+          "min": 1022.5,
+          "max": 1609.3,
+          "n": 5
+        }
+      },
+      "compat": {
+        "CreateBucket": "ok",
+        "PutBucketCors / GetBucketCors": "FAIL NotImplemented: A header you provided implies functionality that is not implemented",
+        "Presigned PUT from a browser (CORS preflight + PUT)": "ok",
+        "Presigned PUT keeps x-amz-meta-* signed into the URL": "ok",
+        "PutObject metadata -> HeadObject": "ok",
+        "Presigned GET": "ok",
+        "CopyObject (server-side)": "ok",
+        "Range GET": "ok",
+        "Conditional GET (If-None-Match -> 304)": "ok",
+        "ListObjectsV2 (prefix + pagination)": "ok",
+        "Multipart upload + UploadPartCopy": "ok",
+        "AbortMultipartUpload": "ok",
+        "Object tagging": "ok",
+        "Bucket versioning": "ok",
+        "DeleteObjects (batch)": "ok"
+      },
+      "durability": {
+        "cycles": 6,
+        "acked": 9374,
+        "ok": 9374,
+        "missing": 0,
+        "corrupt": 0
+      },
+      "durabilityCycles": [
+        {
+          "cycle": 1,
+          "mode": "mid-write",
+          "acked": 1116,
+          "ok": 1116,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 2,
+          "mode": "after-ack",
+          "acked": 1774,
+          "ok": 1774,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 3,
+          "mode": "mid-write",
+          "acked": 1161,
+          "ok": 1161,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 4,
+          "mode": "after-ack",
+          "acked": 2061,
+          "ok": 2061,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 5,
+          "mode": "mid-write",
+          "acked": 1134,
+          "ok": 1134,
+          "missing": 0,
+          "corrupt": 0
+        },
+        {
+          "cycle": 6,
+          "mode": "after-ack",
+          "acked": 2128,
+          "ok": 2128,
+          "missing": 0,
+          "corrupt": 0
+        }
+      ]
+    }
+  }
+}
